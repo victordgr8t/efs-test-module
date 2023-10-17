@@ -53,26 +53,26 @@ variable "whitelist_sg" {
   default     = []
 }
 
-variable "efs_backup_policy_enabled" {
-  type        = bool
-  description = "If `true`, it will turn on automatic backups."
-  default     = false
-}
+# variable "efs_backup_policy_enabled" {
+#   type        = bool
+#   description = "If `true`, it will turn on automatic backups."
+#   default     = false
+# }
 
-variable "root_permissions" {
-  type    = string
-  default = "0777"
-}
-variable "owner_gid" {
-  description = "Specifies the POSIX group ID to apply to the root_directory"
-  type        = number
-  default     = 0
-}
-variable "owner_uid" {
-  description = "Specifies the POSIX user ID to apply to the root_directory"
-  type        = number
-  default     = 0
-}
+# variable "root_permissions" {
+#   type    = string
+#   default = "0777"
+# }
+# variable "owner_gid" {
+#   description = "Specifies the POSIX group ID to apply to the root_directory"
+#   type        = number
+#   default     = 0
+# }
+# variable "owner_uid" {
+#   description = "Specifies the POSIX user ID to apply to the root_directory"
+#   type        = number
+#   default     = 0
+# }
 
 variable "ap_directory" {
   description = "Create and directory to share using EFS access point"

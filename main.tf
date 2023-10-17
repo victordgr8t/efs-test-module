@@ -18,6 +18,7 @@ provider "aws" {
 
 # module "efs" {
 #   source = "git::https://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@github.com/bankservafrica/bsa-modules-aws-migration.git//efs-module"
+#     source = "git::https://github.com/victordgr8t/efs-test-module.git"
 
 #   efs_name                        = var.efs_name
 #   vpc_id                          = var.vpc_id
@@ -61,21 +62,21 @@ resource "aws_efs_access_point" "ElasticFS_storage_access_point" {
   file_system_id = aws_efs_file_system.ElasticFS_storage.id
   root_directory {
     path = var.ap_directory
-    creation_info {
-      owner_gid   = var.owner_gid
-      owner_uid   = var.owner_uid
-      permissions = var.root_permissions
-    }
+    # creation_info {
+    #   owner_gid   = var.owner_gid
+    #   owner_uid   = var.owner_uid
+    #   permissions = var.root_permissions
+    # }
   }
 }
 
 #Create Backup for EFS
-resource "aws_efs_backup_policy" "policy" {
-  file_system_id = aws_efs_file_system.ElasticFS_storage.id
+# resource "aws_efs_backup_policy" "policy" {
+#   file_system_id = aws_efs_file_system.ElasticFS_storage.id
 
-  backup_policy {
-    status = var.efs_backup_policy_enabled ? "ENABLED" : "DISABLED"
-  }
-}
+#   backup_policy {
+#     status = var.efs_backup_policy_enabled ? "ENABLED" : "DISABLED"
+#   }
+# }
 
 
