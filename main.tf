@@ -137,7 +137,7 @@ resource "aws_efs_mount_target" "ElasticFS_Storage_mount_target" {
 
 # IAM role for lambdax
 resource "aws_iam_role" "lambda_role" {
-  name               = "terraform_aws_lambda_role"
+  name               = "tf_aws_lambda_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -159,7 +159,7 @@ EOF
 
 resource "aws_iam_policy" "iam_policy_for_lambda" {
 
-  name        = "aws_iam_policy_for_terraform_aws_lambda_role"
+  name        = "aws_iam_policy_for_tf_aws_lambda_role"
   path        = "/"
   description = "AWS IAM Policy for managing aws lambda role"
   policy      = <<EOF
@@ -189,7 +189,7 @@ EOF
 }
 
 resource "aws_iam_policy" "lambda_efs" {
-  name        = "LambdaEFSAccess"
+  name        = "LAMBDAefsACCCESS"
   description = "Allow Lambda to access EFS"
 
   policy = <<EOF
