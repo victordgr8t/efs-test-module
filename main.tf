@@ -119,3 +119,148 @@ resource "aws_instance" "efs_instance" {
               EOF
 }
 
+
+# IAM role for lambdax
+resource "aws_iam_role" "lambda_role" {
+  name               = "terraform_aws_lambda_role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+# IAM policy for logging from a lambda
+
+resource "aws_iam_policy" "iam_policy_for_lambda" {
+
+  name        = "aws_iam_policy_for_terraform_aws_lambda_role"
+  path        = "/"
+  description = "AWS IAM Policy for managing aws lambda role"
+  policy      = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+  {
+            "Sid": "AllowDeletePolicyVersion",
+            "Effect": "Allow",
+            "Action": "iam:DeletePolicyVersion",
+            "Resource": "arn:aws:iam::296274010522:policy/aws_iam_policy_for_terraform_aws_lambda_role"
+        },
+
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "iam:DeletePolicy"
+      ],
+      "Resource": "arn:aws:logs:*:*:*",
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "lambda_efs" {
+  name        = "LambdaEFSAccess"
+  description = "Allow Lambda to access EFS"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowLambdaAccessToEFS",
+            "Effect": "Allow",
+            "Action": [
+                "elasticfilesystem:ClientMount",
+                "elasticfilesystem:ClientWrite"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_efs_attach" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_efs.arn
+}
+
+
+# Policy Attachment on the role.
+
+resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.iam_policy_for_lambda.arn
+}
+
+data "aws_iam_policy_document" "lambda_ec2_permissions" {
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "lambda_ec2_policy" {
+  name        = "LambdaEC2Permissions"
+  description = "Allow Lambda to manage ENIs for VPC access"
+  policy      = data.aws_iam_policy_document.lambda_ec2_permissions.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_ec2_attach" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_ec2_policy.arn
+}
+
+
+# Generates an archive from content, a file, or a directory of files.
+
+data "archive_file" "zip_the_python_code" {
+  type        = "zip"
+  source_dir  = "${path.module}/python/"
+  output_path = "${path.module}/python/efs-lambda-test.zip"
+}
+
+# Create a lambda function
+# In terraform ${path.module} is the current directory.
+resource "aws_lambda_function" "terraform_lambda_func" {
+  filename      = "${path.module}/python/efs-lambda-test.zip"
+  function_name = "EFS-Lambda-Function"
+  description   = "Testing Lambda Function for EFS File Storage"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "efs-lambda-test.lambda_handler"
+  runtime       = "python3.8"
+
+  depends_on = [aws_efs_mount_target.ElasticFS_Storage_mount_target]
+
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [aws_security_group.efs_sg.id]
+  }
+
+  file_system_config {
+    arn              = aws_efs_access_point.ElasticFS_Storage_access_point.arn
+    local_mount_path = "/mnt/efs"
+  }
+}
+
+
+
