@@ -23,4 +23,7 @@ output "ElasticFS_storage_access_point_arn" {
   description = "EFS access point ARN"
 }
 
-
+output "ElasticFS_storage_SG_id" {
+  value       = aws_security_group.efs_sg.id
+  description = "EFS Security Group ID"
+}
