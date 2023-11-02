@@ -1,14 +1,116 @@
-
 variable "efs_name" {
-  description = "Name for EFS, SG"
+  description = "value"
   type        = string
-  default     = "ElasticFS_storage"
+  default     = "ElasticFS_Storage"
 }
 
 variable "vpc_id" {
   description = "VPC ID for SG"
   type        = string
-  default     = "vpc-031729aa862405f6b"
+  default     = "vpc-01f8cf2855398cc3c"
+}
+
+variable "region" {
+  description = "value of AWS region"
+  default     = "eu-west-1"
+}
+
+variable "access_key" {
+  type        = string
+  description = "Access key of AWS"
+  default     = "AKIAUJ62OUGNGRAGWQFL"
+
+}
+
+variable "secret_key" {
+  type        = string
+  description = "Secret Access key of AWS"
+  default     = "UpEPdpS4BErAmrcDadXanGUOSCAljVKNFGUonNlF"
+
+}
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Subnets for mount target"
+  default     = ["subnet-0eeed545965bcc422"]
+}
+
+variable "ami" {
+  type        = string
+  description = "AMI for EC2 instance"
+  default     = "ami-06ed60ed1369448bd"
+
+}
+
+variable "instance_type" {
+  type        = string
+  description = "Instance type for EC2 instance"
+  default     = "t3.micro"
+}
+
+variable "key_name" {
+  type        = string
+  description = "Key name for EC2 instance"
+  default     = "my-key-pair"
+}
+
+variable "kms_key_id" {
+  type        = string
+  description = "The ARN for the KMS encryption key. When specifying kms_key_id, encrypted needs to be set to true"
+  default     = null
+}
+
+variable "permissions" {
+  description = "Specifies the POSIX permissions to apply to the root_directory"
+  type        = string
+  default     = "755"
+}
+
+variable "owner_gid" {
+  description = "Specifies the POSIX group ID to apply to the root_directory"
+  type        = number
+  default     = 1000
+}
+variable "owner_uid" {
+  description = "Specifies the POSIX user ID to apply to the root_directory"
+  type        = number
+  default     = 1000
+}
+
+variable "gid" {
+  description = "Specifies the POSIX group ID to apply to the root_directory"
+  type        = number
+  default     = 1000
+}
+
+variable "uid" {
+  description = "Specifies the POSIX user ID to apply to the root_directory"
+  type        = number
+  default     = 1000
+}
+
+variable "ap_directory" {
+  description = "Create and directory to share using EFS access point"
+  type        = string
+  default     = "/testshare"
+}
+
+variable "whitelist_cidr" {
+  description = "List of CIDR blocks for whitelist"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "whitelist_sg" {
+  description = "List of Security Groups Block for whitelist"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "efs_backup_policy_enabled" {
+  type        = bool
+  description = "If `true`, it will turn on automatic backups."
+  default     = false
 }
 
 variable "performance_mode_mode" {
@@ -35,103 +137,16 @@ variable "encrypted" {
   default     = false
 }
 
-variable "kms_key_id" {
-  description = "The ARN for the KMS encryption key. When specifying kms_key_id, encrypted needs to be set to true"
-  type        = string
-  default     = null
-}
-
-variable "whitelist_cidr" {
-  description = "List of CIDR blocks for whitelist"
-  type        = list(string)
-  default     = []
-}
-
-variable "whitelist_sg" {
-  description = "List of Security Groups Block for whitelist"
-  type        = list(string)
-  default     = []
-}
-
-# variable "efs_backup_policy_enabled" {
-#   type        = bool
-#   description = "If `true`, it will turn on automatic backups."
-#   default     = false
-# }
-
-# variable "root_permissions" {
-#   type    = string
-#   default = "0777"
-# }
-# variable "owner_gid" {
-#   description = "Specifies the POSIX group ID to apply to the root_directory"
-#   type        = number
-#   default     = 0
-# }
-# variable "owner_uid" {
-#   description = "Specifies the POSIX user ID to apply to the root_directory"
-#   type        = number
-#   default     = 0
-# }
-
-variable "ap_directory" {
-  description = "Create and directory to share using EFS access point"
-  type        = string
-  default     = "/testshare"
-}
-
-variable "subnet_ids" {
-  description = "Subnets for the mount target"
-  type        = list(string)
-  default     = ["subnet-0f56f19f7a8b9b4a1"]
-}
-
 variable "tags" {
-  type = map(any)
+  description = "A mapping of tags to assign to the resource"
+  type        = map(string)
   default = {
-    Env = "Dev"
+    env = "test"
   }
-  description = "Resource tags"
 }
 
-variable "access_key" {
+variable "availability_zone_id" {
+  description = "The AZ ID where the mount target needs to be created"
   type        = string
-  description = "Access key of AWS"
-  default     = "AKIAZK6OTII5IEYRYJ2R"
-
+  default     = "eu-west-1a"
 }
-
-variable "secret_key" {
-  type        = string
-  description = "Secret Access key of AWS"
-  default     = "/vWx++c5JyKwmb8Ex1orXCDm0hzXeRBnt4pgGY6g"
-
-}
-
-# variable "access_key" {
-#   description = "AWS Access Key"
-#   type        = string
-#   default     = "ASIAZK6OTII5BURFLXFC"
-# }
-
-# variable "secret_key" {
-#   description = "AWS Secret Key"
-#   type        = string
-#   default     = "/l91kk5t8wf8UksKQ+lTtViIsZcUHu9fdM4ZUUA9"
-# }
-
-variable "region" {
-  description = "AWS region"
-  default     = "af-south-1"
-}
-
-
-# variable "efs_storage_group" {
-#   description = "EFS Security Group ID"
-#   default = "sg-04f23db7618ef1863"
-# }
-
-# variable "efs_storage_access_point_id" {
-#   description = "EFS access point ID"
-#   default = "fsap-0f2a0b6b3f2f1a1d1"
-# }
