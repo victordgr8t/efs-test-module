@@ -119,6 +119,21 @@ resource "aws_instance" "efs_instance" {
               EOF
 }
 
+# Ensure this subnet is in the same AZ as your Lambda function
+# Ensure the security group allows necessary traffic
+
+resource "aws_efs_mount_target" "ElasticFS_Storage_mount_target" {
+  file_system_id  = aws_efs_file_system.ElasticFS_Storage.id
+  subnet_id       = var.subnet_ids[0]
+  security_groups = [aws_security_group.efs_sg.id]
+
+  depends_on = [
+    aws_security_group.efs_sg,
+    aws_efs_file_system.ElasticFS_Storage
+  ]
+
+}
+
 
 # IAM role for lambdax
 resource "aws_iam_role" "lambda_role" {
