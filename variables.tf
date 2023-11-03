@@ -7,7 +7,7 @@ variable "efs_name" {
 variable "vpc_id" {
   description = "VPC ID for SG"
   type        = string
-  default     = "vpc-01f8cf2855398cc3c"
+  default     = "***"
 }
 
 variable "region" {
@@ -18,27 +18,27 @@ variable "region" {
 variable "access_key" {
   type        = string
   description = "Access key of AWS"
-  default     = "AKIAUJ62OUGNGRAGWQFL"
+  default     = "***"
 
 }
 
 variable "secret_key" {
   type        = string
   description = "Secret Access key of AWS"
-  default     = "UpEPdpS4BErAmrcDadXanGUOSCAljVKNFGUonNlF"
+  default     = "***"
 
 }
 
 variable "subnet_ids" {
   type        = list(string)
   description = "Subnets for mount target"
-  default     = ["subnet-0eeed545965bcc422"]
+  default     = [***]
 }
 
 variable "ami" {
   type        = string
   description = "AMI for EC2 instance"
-  default     = "ami-06ed60ed1369448bd"
+  default     = "***"
 
 }
 
