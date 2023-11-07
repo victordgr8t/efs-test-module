@@ -12,27 +12,27 @@ variable "vpc_id" {
 
 variable "region" {
   description = "value of AWS region"
-  default     = "eu-west-1"
+  default     = "af-south-1"
 }
 
 variable "access_key" {
   type        = string
   description = "Access key of AWS"
-  default     = "***"
+  default     = "****"
 
 }
 
 variable "secret_key" {
   type        = string
   description = "Secret Access key of AWS"
-  default     = "***"
+  default     = "*******"
 
 }
 
 variable "subnet_ids" {
   type        = list(string)
   description = "Subnets for mount target"
-  default     = [***]
+  default     = ["***"]
 }
 
 variable "ami" {
@@ -45,7 +45,7 @@ variable "ami" {
 variable "instance_type" {
   type        = string
   description = "Instance type for EC2 instance"
-  default     = "t3.micro"
+  default     = "t2.micro"
 }
 
 variable "key_name" {
@@ -60,7 +60,7 @@ variable "kms_key_id" {
   default     = null
 }
 
-variable "permissions" {
+variable "root_permissions" {
   description = "Specifies the POSIX permissions to apply to the root_directory"
   type        = string
   default     = "755"
@@ -72,18 +72,6 @@ variable "owner_gid" {
   default     = 1000
 }
 variable "owner_uid" {
-  description = "Specifies the POSIX user ID to apply to the root_directory"
-  type        = number
-  default     = 1000
-}
-
-variable "gid" {
-  description = "Specifies the POSIX group ID to apply to the root_directory"
-  type        = number
-  default     = 1000
-}
-
-variable "uid" {
   description = "Specifies the POSIX user ID to apply to the root_directory"
   type        = number
   default     = 1000
@@ -104,7 +92,7 @@ variable "whitelist_cidr" {
 variable "whitelist_sg" {
   description = "List of Security Groups Block for whitelist"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = []
 }
 
 variable "efs_backup_policy_enabled" {
@@ -148,5 +136,5 @@ variable "tags" {
 variable "availability_zone_id" {
   description = "The AZ ID where the mount target needs to be created"
   type        = string
-  default     = "eu-west-1a"
+  default     = "af-south-1a"
 }
