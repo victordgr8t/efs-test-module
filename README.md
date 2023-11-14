@@ -152,13 +152,12 @@ This EC2 instance serves as a test or example of how to set up an EC2 instance t
 ## See variables.tf for all variables that can be entered.
 
 ## Requirements
-Name	      |   Version
-terraform	  |  >= 1.0
-aws	        |    >= 5.0
+Name	      |   terraform >= 1.0
+Version  	  |  aws	>= 5.0     
 
 ## Providers
-Name	    |    Version
-aws	      |     >= 5.0
+Name	    |    aws 
+Version   | >= 5.0   
 
 
 ## Inputs
